@@ -1,6 +1,6 @@
 # DamNUS
 
-DamNUS v0.2 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Skill collection for NUS campus systems. It searches NUSMods modules and timetables through the public API, and finds authenticated NSWS TA/RA jobs.
+DamNUS v0.2 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Skill collection. It searches NUSMods modules and timetables, finds authenticated NSWS TA/RA jobs, and provides sourced Xiaohongshu research through a standalone Skill.
 
 ## Set up
 
@@ -32,9 +32,10 @@ DamNUS v0.2 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Ski
    ln -s "$(pwd)/skill/damnus" ~/.codex/skills/damnus
    ln -s "$(pwd)/skill/damnus-nusmods" ~/.codex/skills/damnus-nusmods
    ln -s "$(pwd)/skill/damnus-nsws-jobs" ~/.codex/skills/damnus-nsws-jobs
+   ln -s "$(pwd)/skill/damnus-search" ~/.codex/skills/damnus-search
    ```
 
-   Restart Codex after adding the links. Use `$damnus` as the router, or invoke `$damnus-nusmods` and `$damnus-nsws-jobs` directly.
+   Restart Codex after adding the links. Use `$damnus` as the NUS router, invoke `$damnus-nusmods` or `$damnus-nsws-jobs` directly, and use the standalone `$damnus-search` for Xiaohongshu research.
 
 4. Confirm that the commands are registered:
 
@@ -45,7 +46,7 @@ DamNUS v0.2 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Ski
    opencli nsws jobs --help
    ```
 
-5. NSWS only: install the [OpenCLI Chrome extension](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk), run `opencli doctor`, then open [NSWS](https://inetapps.nus.edu.sg/nsws/app/student/dashboard) in Chrome and sign in. NUSMods commands use a public API and do not need Chrome or an NUS login.
+5. For browser-backed NSWS and Xiaohongshu workflows, install the [OpenCLI Chrome extension](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk) and run `opencli doctor`. Sign in to [NSWS](https://inetapps.nus.edu.sg/nsws/app/student/dashboard) for job search, or run `opencli xiaohongshu login` for `$damnus-search`. NUSMods commands use a public API and need neither login.
 
 ## NUSMods CLI
 
@@ -100,6 +101,15 @@ Available filters:
 - `skill/damnus` routes requests to the right specialized workflow.
 - `skill/damnus-nusmods` discovers modules, inspects requirements, and checks class schedules.
 - `skill/damnus-nsws-jobs` finds TA/RA roles, compares fit, and recommends applications.
+- `skill/damnus-search` asks Xiaohongshu 点点 first, synthesizes the results, and always links the original notes.
+
+`damnus-search` is intentionally standalone rather than part of the NUS router. Its primary command is:
+
+```bash
+opencli xiaohongshu ask "<question>" --timeout 90 --source-limit 10 -f json
+```
+
+If 点点 returns no usable note URLs, the Skill falls back to `opencli xiaohongshu search` for source links. It does not return an unsourced Xiaohongshu summary.
 
 EduRec is not included yet.
 
@@ -119,4 +129,4 @@ Adapter decisions are documented in [`docs/nusmods-strategy.md`](docs/nusmods-st
 
 ## Privacy
 
-DamNUS performs read-only queries. NUSMods commands use public data. NSWS commands read the authenticated browser session in memory, never store the NUS password or token, and never submit an application automatically.
+DamNUS does not store browser credentials. NUSMods commands use public data. NSWS commands read the authenticated browser session in memory and never submit an application automatically. The standalone search Skill sends the user's research question to Xiaohongshu 点点 and returns links supplied by Xiaohongshu.

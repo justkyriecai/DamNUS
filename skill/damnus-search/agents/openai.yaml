@@ -1,0 +1,4 @@
+interface:
+  display_name: "DamNUS Search"
+  short_description: "Search Xiaohongshu with linked source notes"
+  default_prompt: "Use $damnus-search to research this question on Xiaohongshu and include links to the original notes."
