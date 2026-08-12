@@ -1,6 +1,6 @@
 {
   "name": "opencli-plugin-damnus",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "OpenCLI commands and skills for NUS campus systems",
   "type": "module",
   "license": "MIT",

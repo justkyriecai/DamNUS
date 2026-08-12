@@ -9,4 +9,5 @@ Identify the platform and load only the matching specialized skill.
 
 - For finding, filtering, or comparing NUS Student Work Scheme TA/RA roles, use `damnus-nsws-jobs`.
 - For module discovery, requirements, workload, or NUSMods class schedules, use `damnus-nusmods`.
+- For Canvas course lists, course details, announcements, file browsing, or downloads, use the existing `opencli canvas` commands directly. There is no specialized Canvas Skill yet.
 - For unsupported EduRec or other campus-system tasks, say that the current DamNUS integration does not cover them yet. Do not invent commands.

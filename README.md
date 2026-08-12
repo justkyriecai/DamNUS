@@ -1,6 +1,6 @@
 # DamNUS
 
-DamNUS v0.2 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Skill collection. It searches NUSMods modules and timetables, finds authenticated NSWS TA/RA jobs, and provides sourced Xiaohongshu research through a standalone Skill.
+DamNUS v0.3 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Skill collection. It reads courses, announcements, and files from NUS Canvas; searches NUSMods modules and timetables; finds authenticated NSWS TA/RA jobs; and provides sourced Xiaohongshu research through a standalone Skill.
 
 ## Set up
 
@@ -44,9 +44,44 @@ DamNUS v0.2 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Ski
    opencli nusmods module --help
    opencli nusmods timetable --help
    opencli nsws jobs --help
+   opencli canvas courses --help
+   opencli canvas announcements --help
+   opencli canvas files --help
    ```
 
-5. For browser-backed NSWS and Xiaohongshu workflows, install the [OpenCLI Chrome extension](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk) and run `opencli doctor`. Sign in to [NSWS](https://inetapps.nus.edu.sg/nsws/app/student/dashboard) for job search, or run `opencli xiaohongshu login` for `$damnus-search`. NUSMods commands use a public API and need neither login.
+5. For browser-backed Canvas, NSWS, and Xiaohongshu workflows, install the [OpenCLI Chrome extension](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk) and run `opencli doctor`. Sign in to [NUS Canvas](https://canvas.nus.edu.sg/) for course access, sign in to [NSWS](https://inetapps.nus.edu.sg/nsws/app/student/dashboard) for job search, or run `opencli xiaohongshu login` for `$damnus-search`. NUSMods commands use a public API and need neither login.
+
+## Canvas CLI
+
+The command format is platform, function, then arguments:
+
+```bash
+opencli canvas courses [--includeNonAcademic] [--limit <number>]
+opencli canvas course <course-id-or-code>
+opencli canvas announcements [course-id-or-code] [--limit <number>]
+opencli canvas files <course-id-or-code> [--query <text>] [--limit <number>]
+opencli canvas download <file-id-or-url> [--output <directory>]
+```
+
+Examples:
+
+```bash
+# List current academic courses
+opencli canvas courses -f table
+
+# Inspect one course by code or numeric Canvas ID
+opencli canvas course BMS5502S -f json
+
+# Read recent announcements across all current courses, or one course only
+opencli canvas announcements --limit 20 -f table
+opencli canvas announcements BMS5502S -f json
+
+# Find course files and download one by its fileId
+opencli canvas files BMS5502S --query project -f table
+opencli canvas download 9626985 --output ./downloads -f json
+```
+
+Canvas commands reuse the current Chrome login session in memory. `download` creates the output directory when needed and refuses to overwrite an existing file.
 
 ## NUSMods CLI
 
@@ -103,6 +138,8 @@ Available filters:
 - `skill/damnus-nsws-jobs` finds TA/RA roles, compares fit, and recommends applications.
 - `skill/damnus-search` asks Xiaohongshu 点点 first, synthesizes the results, and always links the original notes.
 
+Canvas is intentionally CLI-only in v0.3. A specialized Canvas Skill will be added only after its useful scenarios and decision rules are defined.
+
 `damnus-search` is intentionally standalone rather than part of the NUS router. Its primary command is:
 
 ```bash
@@ -123,10 +160,15 @@ opencli validate nusmods/search
 opencli validate nusmods/module
 opencli validate nusmods/timetable
 opencli validate nsws/jobs
+opencli validate canvas/courses
+opencli validate canvas/course
+opencli validate canvas/announcements
+opencli validate canvas/files
+opencli validate canvas/download
 ```
 
-Adapter decisions are documented in [`docs/nusmods-strategy.md`](docs/nusmods-strategy.md) and [`docs/nsws-strategy.md`](docs/nsws-strategy.md).
+Adapter decisions are documented in [`docs/nusmods-strategy.md`](docs/nusmods-strategy.md), [`docs/nsws-strategy.md`](docs/nsws-strategy.md), and [`docs/canvas-strategy.md`](docs/canvas-strategy.md).
 
 ## Privacy
 
-DamNUS does not store browser credentials. NUSMods commands use public data. NSWS commands read the authenticated browser session in memory and never submit an application automatically. The standalone search Skill sends the user's research question to Xiaohongshu 点点 and returns links supplied by Xiaohongshu.
+DamNUS does not store browser credentials. NUSMods commands use public data. Canvas and NSWS commands read the authenticated browser session in memory; Canvas commands only read course data and download files, while NSWS never submits an application automatically. The standalone search Skill sends the user's research question to Xiaohongshu 点点 and returns links supplied by Xiaohongshu.
