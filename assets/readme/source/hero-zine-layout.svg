@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1942" height="809" viewBox="0 0 1942 809"
+     role="img" aria-labelledby="title desc">
+  <title id="title">DamNUS — Damn! NUS! Good.</title>
+  <desc id="desc">Editable typography overlay for the generated Minimal Zine Poster background.</desc>
+
+  <g id="project-title" fill="#26241f">
+    <text x="112" y="155" font-family="American Typewriter, Courier New, monospace"
+          font-size="25" font-weight="600" letter-spacing="4.5">OPENCLI / NUS CAMPUS SYSTEMS</text>
+    <text x="102" y="302" font-family="Libre Baskerville, Baskerville, Georgia, serif"
+          font-size="118" font-weight="700" letter-spacing="-5">DamNUS</text>
+    <text x="112" y="384" font-family="American Typewriter, Courier New, monospace"
+          font-size="38" font-weight="700" letter-spacing="1.8">DAMN! NUS! GOOD.</text>
+    <text x="112" y="445" font-family="Libre Baskerville, Baskerville, Georgia, serif"
+          font-size="28" font-style="italic">The good kind of “damn.”</text>
+  </g>
+
+  <g id="project-description" font-family="American Typewriter, Courier New, monospace" fill="#696256">
+    <text x="112" y="528" font-size="24" letter-spacing=".8">Canvas · NUSMods · NSWS</text>
+    <text x="112" y="568" font-size="24" letter-spacing=".8">one command surface.</text>
+    <text x="112" y="690" font-size="18" letter-spacing="2.2">v0.3 / SINGAPORE / AGENT-READY</text>
+  </g>
+
+  <circle cx="112" cy="625" r="7" fill="#ef7c00"/>
+  <path d="M136 625H308" stroke="#877d6f" stroke-width="2" stroke-dasharray="2 10"/>
+</svg>

@@ -1,174 +1,142 @@
-# DamNUS
+<p align="center">
+  <img src="./assets/readme/hero-zine.webp" width="100%" alt="DamNUS turns NUS Canvas, NUSMods, and NSWS into one command surface — the good kind of damn, shown as three archival system slips connected into an orange exclamation mark.">
+</p>
 
-DamNUS v0.3 is an [OpenCLI](https://github.com/jackwener/opencli) plugin and Skill collection. It reads courses, announcements, and files from NUS Canvas; searches NUSMods modules and timetables; finds authenticated NSWS TA/RA jobs; and provides sourced Xiaohongshu research through a standalone Skill.
+<p align="center">
+  <strong>Less tab-hopping. More getting things done.</strong><br>
+  <code>v0.3.0</code> · <code>Node ≥ 21</code> · <code>MIT</code>
+</p>
 
-## Set up
+## Start here
 
-1. Install Node.js 21 or newer and OpenCLI:
-
-   ```bash
-   npm install -g @jackwener/opencli
-   opencli --version
-   ```
-
-2. Clone and register this repository as a local OpenCLI plugin:
-
-   ```bash
-   git clone https://github.com/KehaoC/DamNUS.git
-   cd DamNUS
-   opencli plugin install "file://$(pwd)"
-   ```
-
-   Released versions can be installed from GitHub instead:
-
-   ```bash
-   opencli plugin install github:KehaoC/DamNUS
-   ```
-
-3. Register the DamNUS skills with Codex (skip a link if it already exists):
-
-   ```bash
-   mkdir -p ~/.codex/skills
-   ln -s "$(pwd)/skill/damnus" ~/.codex/skills/damnus
-   ln -s "$(pwd)/skill/damnus-nusmods" ~/.codex/skills/damnus-nusmods
-   ln -s "$(pwd)/skill/damnus-nsws-jobs" ~/.codex/skills/damnus-nsws-jobs
-   ln -s "$(pwd)/skill/damnus-search" ~/.codex/skills/damnus-search
-   ```
-
-   Restart Codex after adding the links. Use `$damnus` as the NUS router, invoke `$damnus-nusmods` or `$damnus-nsws-jobs` directly, and use the standalone `$damnus-search` for Xiaohongshu research.
-
-4. Confirm that the commands are registered:
-
-   ```bash
-   opencli nusmods search --help
-   opencli nusmods module --help
-   opencli nusmods timetable --help
-   opencli nsws jobs --help
-   opencli canvas courses --help
-   opencli canvas announcements --help
-   opencli canvas files --help
-   ```
-
-5. For browser-backed Canvas, NSWS, and Xiaohongshu workflows, install the [OpenCLI Chrome extension](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk) and run `opencli doctor`. Sign in to [NUS Canvas](https://canvas.nus.edu.sg/) for course access, sign in to [NSWS](https://inetapps.nus.edu.sg/nsws/app/student/dashboard) for job search, or run `opencli xiaohongshu login` for `$damnus-search`. NUSMods commands use a public API and need neither login.
-
-## Canvas CLI
-
-The command format is platform, function, then arguments:
+You need [OpenCLI](https://github.com/jackwener/opencli), this plugin, and—for logged-in NUS systems—the OpenCLI Chrome extension.
 
 ```bash
-opencli canvas courses [--includeNonAcademic] [--limit <number>]
-opencli canvas course <course-id-or-code>
-opencli canvas announcements [course-id-or-code] [--limit <number>]
-opencli canvas files <course-id-or-code> [--query <text>] [--limit <number>]
-opencli canvas download <file-id-or-url> [--output <directory>]
+# 1. Install OpenCLI
+npm install -g @jackwener/opencli
+
+# 2. Install DamNUS
+opencli plugin install github:KehaoC/DamNUS
+
+# 3. Check the browser bridge
+opencli doctor
 ```
 
-Examples:
+Install the [OpenCLI Chrome extension](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk), then sign in to [NUS Canvas](https://canvas.nus.edu.sg/) and/or [NSWS](https://inetapps.nus.edu.sg/nsws/app/student/dashboard) in Chrome. NUSMods needs no login.
+
+<details>
+<summary><strong>Develop locally</strong></summary>
 
 ```bash
-# List current academic courses
-opencli canvas courses -f table
+git clone https://github.com/KehaoC/DamNUS.git
+cd DamNUS
+opencli plugin install "file://$(pwd)"
+```
 
-# Inspect one course by code or numeric Canvas ID
-opencli canvas course BMS5502S -f json
+Local installs are symlinked, so edits are available immediately.
 
-# Read recent announcements across all current courses, or one course only
+</details>
+
+## The good stuff
+
+| System | What DamNUS does | Start with |
+| --- | --- | --- |
+| **Canvas** | Courses, details, announcements, files, downloads | `opencli canvas courses` |
+| **NUSMods** | Module discovery, requirements, timetables | `opencli nusmods search "machine learning"` |
+| **NSWS** | Search and filter TA/RA jobs | `opencli nsws jobs --role ta` |
+
+```bash
+# Catch up on Canvas, find a file, download it
 opencli canvas announcements --limit 20 -f table
-opencli canvas announcements BMS5502S -f json
-
-# Find course files and download one by its fileId
 opencli canvas files BMS5502S --query project -f table
 opencli canvas download 9626985 --output ./downloads -f json
-```
 
-Canvas commands reuse the current Chrome login session in memory. `download` creates the output directory when needed and refuses to overwrite an existing file.
-
-## NUSMods CLI
-
-The command format is platform, function, then arguments:
-
-```bash
-opencli nusmods search <query> [filters]
-opencli nusmods module <module-code> [filters]
-opencli nusmods timetable <module-code> [filters]
-```
-
-Examples:
-
-```bash
-# Find modules by code or title; semester 0 means all semesters
-opencli nusmods search "machine learning" --semester 1 --limit 10 -f json
-
-# Inspect description, prerequisites, preclusions, workload, and offered semesters
+# Check a module and its classes
 opencli nusmods module CS1010S --acadYear 2026-2027 -f json
+opencli nusmods timetable CS1010S --semester 1 --day Tue -f table
 
-# List all classes, or narrow by lesson type, class number, and weekday
-opencli nusmods timetable CS1010S --semester 1 -f table
-opencli nusmods timetable CS1010S --semester 1 --lessonType Tutorial --day Tue -f json
+# Find campus work worth applying for
+opencli nsws jobs --role ta --minRate 20 -f table
 ```
 
-The default academic year follows the NUS July-to-June cycle. Override it with `--acadYear YYYY-YYYY`. Search accepts `--semester 0|1|2|3|4` and `--limit 1-100`; timetable accepts `--semester 1|2|3|4`, `--lessonType`, `--classNo`, and `--day`.
+## Command map
 
-## NSWS jobs CLI
+<details open>
+<summary><strong>Canvas</strong></summary>
 
-TA and RA roles are included by default:
+```text
+opencli canvas courses [--includeNonAcademic] [--limit N]
+opencli canvas course <course-id-or-code>
+opencli canvas announcements [course-id-or-code] [--limit N]
+opencli canvas files <course-id-or-code> [--query TEXT] [--limit N]
+opencli canvas download <file-id-or-url> [--output DIR]
+```
+
+Canvas reuses your Chrome session in memory. Downloads create the destination directory and never overwrite an existing file.
+
+</details>
+
+<details>
+<summary><strong>NUSMods</strong></summary>
+
+```text
+opencli nusmods search <query> [--acadYear YYYY-YYYY] [--semester 0-4]
+opencli nusmods module <module-code> [--acadYear YYYY-YYYY]
+opencli nusmods timetable <module-code> [--semester 1-4] [filters]
+```
+
+The academic year defaults to the current NUS July–June cycle. Timetables can be filtered by lesson type, class number, and weekday.
+
+</details>
+
+<details>
+<summary><strong>NSWS jobs</strong></summary>
+
+```text
+opencli nsws jobs [--role ta|ra|ta,ra|all] [--query TEXT]
+                  [--applicant TYPE] [--payment TYPE]
+                  [--minRate SGD] [--limit N]
+```
+
+TA and RA roles are included by default. DamNUS searches and compares jobs; it never submits an application for you.
+
+</details>
+
+## Agent-ready Skills
 
 ```bash
-opencli nsws jobs --limit 20
-opencli nsws jobs --role ta --applicant undergrad -f table
-opencli nsws jobs --role ra --query AI -f json
-opencli nsws jobs --minRate 20 --payment timesheet -f json
+mkdir -p ~/.codex/skills
+ln -s "$(pwd)/skill/damnus" ~/.codex/skills/damnus
+ln -s "$(pwd)/skill/damnus-nusmods" ~/.codex/skills/damnus-nusmods
+ln -s "$(pwd)/skill/damnus-nsws-jobs" ~/.codex/skills/damnus-nsws-jobs
+ln -s "$(pwd)/skill/damnus-search" ~/.codex/skills/damnus-search
 ```
 
-Available filters:
+- `$damnus` routes NUS requests to the right workflow.
+- `$damnus-nusmods` handles module and timetable research.
+- `$damnus-nsws-jobs` finds and recommends TA/RA opportunities.
+- `$damnus-search` performs sourced Xiaohongshu research and verifies original-note links.
 
-| Flag | Values | Default |
-|---|---|---|
-| `--role` | `ta`, `ra`, `ta,ra`, `all` | `ta,ra` |
-| `--query` | Keyword matched by NSWS | empty |
-| `--applicant` | `any`, `undergrad`, `graduate`, `graduate-sra` | `any` |
-| `--payment` | `any`, `timesheet`, `deliverables` | `any` |
-| `--minRate` | Minimum hourly rate in SGD | `0` |
-| `--limit` | 1–100 rows | `20` |
+Canvas stays CLI-only until its Skill scenarios are worth encoding. EduRec is not supported yet.
 
-## Skills
+## Trust, then verify
 
-- `skill/damnus` routes requests to the right specialized workflow.
-- `skill/damnus-nusmods` discovers modules, inspects requirements, and checks class schedules.
-- `skill/damnus-nsws-jobs` finds TA/RA roles, compares fit, and recommends applications.
-- `skill/damnus-search` asks Xiaohongshu 点点 first, synthesizes the results, and always links the original notes.
-
-Canvas is intentionally CLI-only in v0.3. A specialized Canvas Skill will be added only after its useful scenarios and decision rules are defined.
-
-`damnus-search` is intentionally standalone rather than part of the NUS router. Its primary command is:
-
-```bash
-opencli xiaohongshu ask "<question>" --timeout 90 --source-limit 10 -f json
-```
-
-Because 点点 may return bare note URLs that cannot be opened directly, the Skill resolves sources through `opencli xiaohongshu search`, keeps the returned `xsec_token`, and verifies each candidate with `opencli xiaohongshu note` before citing it. It does not return an unsourced or unverified Xiaohongshu summary.
-
-EduRec is not included yet.
-
-## Development
-
-Local plugin installs are symlinked, so source edits are immediately available:
+DamNUS never stores browser credentials. Canvas and NSWS authentication stays in the live Chrome session; NUSMods uses public data. To run the complete test and adapter checks:
 
 ```bash
 npm test
-opencli validate nusmods/search
-opencli validate nusmods/module
-opencli validate nusmods/timetable
-opencli validate nsws/jobs
 opencli validate canvas/courses
-opencli validate canvas/course
 opencli validate canvas/announcements
-opencli validate canvas/files
 opencli validate canvas/download
+opencli validate nusmods/search
+opencli validate nsws/jobs
 ```
 
-Adapter decisions are documented in [`docs/nusmods-strategy.md`](docs/nusmods-strategy.md), [`docs/nsws-strategy.md`](docs/nsws-strategy.md), and [`docs/canvas-strategy.md`](docs/canvas-strategy.md).
+Adapter decisions: [Canvas](docs/canvas-strategy.md) · [NUSMods](docs/nusmods-strategy.md) · [NSWS](docs/nsws-strategy.md)
 
-## Privacy
+---
 
-DamNUS does not store browser credentials. NUSMods commands use public data. Canvas and NSWS commands read the authenticated browser session in memory; Canvas commands only read course data and download files, while NSWS never submits an application automatically. The standalone search Skill sends the user's research question to Xiaohongshu 点点 and returns links supplied by Xiaohongshu.
+<p align="center">
+  <strong>Damn! NUS! Good.</strong><br>
+  <sub>Built for NUS students who would rather type one command than open five tabs.</sub>
+</p>
