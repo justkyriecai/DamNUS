@@ -109,7 +109,7 @@ Available filters:
 opencli xiaohongshu ask "<question>" --timeout 90 --source-limit 10 -f json
 ```
 
-If 点点 returns no usable note URLs, the Skill falls back to `opencli xiaohongshu search` for source links. It does not return an unsourced Xiaohongshu summary.
+Because 点点 may return bare note URLs that cannot be opened directly, the Skill resolves sources through `opencli xiaohongshu search`, keeps the returned `xsec_token`, and verifies each candidate with `opencli xiaohongshu note` before citing it. It does not return an unsourced or unverified Xiaohongshu summary.
 
 EduRec is not included yet.
 
