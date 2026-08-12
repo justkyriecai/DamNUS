@@ -1,0 +1,6 @@
+{
+  "name": "damnus",
+  "version": "0.1.0",
+  "opencli": ">=1.8.6",
+  "description": "NUS campus systems through OpenCLI"
+}

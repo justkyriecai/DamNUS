@@ -1,0 +1,4 @@
+interface:
+  display_name: "DamNUS"
+  short_description: "Route NUS campus-system requests to DamNUS tools"
+  default_prompt: "Use $damnus to help me with an NUS campus-system task."

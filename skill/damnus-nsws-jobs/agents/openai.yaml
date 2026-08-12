@@ -1,0 +1,4 @@
+interface:
+  display_name: "DamNUS NSWS Jobs"
+  short_description: "Find and assess NUS TA and RA opportunities"
+  default_prompt: "Use $damnus-nsws-jobs to find suitable NUS TA or RA jobs for me."

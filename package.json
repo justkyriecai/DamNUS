@@ -1,0 +1,16 @@
+{
+  "name": "opencli-plugin-damnus",
+  "version": "0.1.0",
+  "description": "OpenCLI commands and skills for NUS campus systems",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "peerDependencies": {
+    "@jackwener/opencli": ">=1.8.6"
+  },
+  "engines": {
+    "node": ">=21"
+  }
+}
