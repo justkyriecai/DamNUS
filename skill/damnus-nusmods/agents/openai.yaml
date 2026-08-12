@@ -1,0 +1,4 @@
+interface:
+  display_name: "DamNUS NUSMods"
+  short_description: "Search NUS modules and inspect class timetables"
+  default_prompt: "Use $damnus-nusmods to help me find an NUS module or inspect its timetable."
