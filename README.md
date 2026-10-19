@@ -16,7 +16,7 @@ You need [OpenCLI](https://github.com/jackwener/opencli), this plugin, and—for
 npm install -g @jackwener/opencli
 
 # 2. Install DamNUS
-opencli plugin install github:KehaoC/DamNUS
+opencli plugin install github:justkyriecai/DamNUS
 
 # 3. Check the browser bridge
 opencli doctor
@@ -28,12 +28,19 @@ Install the [OpenCLI Chrome extension](https://chromewebstore.google.com/detail/
 <summary><strong>Develop locally</strong></summary>
 
 ```bash
-git clone https://github.com/KehaoC/DamNUS.git
+git clone https://github.com/justkyriecai/DamNUS.git
 cd DamNUS
 opencli plugin install "file://$(pwd)"
 ```
 
 Local installs are symlinked, so edits are available immediately.
+
+If you move or delete the local checkout, the symlink in `~/.opencli/plugins/damnus` is left dangling: `opencli plugin list` still shows the plugin, but `uninstall` reports it as not installed and reinstalling fails with `ENOTDIR`. Remove the link and install again:
+
+```bash
+rm ~/.opencli/plugins/damnus
+opencli plugin install github:justkyriecai/DamNUS
+```
 
 </details>
 
